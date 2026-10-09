@@ -16,11 +16,18 @@ services:
         as: 80
         to:
           - global: true
+          - service: dashboard
 
   dashboard:
     image: ghcr.io/divyanaras/attack-sandbox-dashboard:latest
     env:
-      - CANARY_URL=http://canary:5678
+      # Akash's internal service-name DNS (http://canary:5678) did not
+      # resolve from the dashboard container despite following the
+      # documented pattern (expose.to: service:dashboard on canary) and
+      # matching the official example exactly. Fell back to canary's own
+      # public URL, which works reliably. Replace with your canary
+      # deployment's actual ingress hostname.
+      - CANARY_URL=https://REPLACE-WITH-CANARY-PUBLIC-URL
     expose:
       - port: 4100
         as: 80
