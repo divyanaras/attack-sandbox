@@ -13,7 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [storefront, internal-api, metadata]
+        include:
+          - name: storefront
+            context: ./storefront
+          - name: internal-api
+            context: ./internal-api
+          - name: metadata
+            context: ./metadata
+          - name: canary-api
+            context: ./k8s/canary-api
+          - name: dashboard
+            context: ./k8s/dashboard
     steps:
       - uses: actions/checkout@v4
 
@@ -24,9 +34,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push ${{ matrix.service }}
+      - name: Build and push ${{ matrix.name }}
         uses: docker/build-push-action@v6
         with:
-          context: ./${{ matrix.service }}
+          context: ${{ matrix.context }}
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/attack-sandbox-${{ matrix.service }}:latest
+          tags: ghcr.io/${{ github.repository_owner }}/attack-sandbox-${{ matrix.name }}:latest
