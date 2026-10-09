@@ -1,9 +1,26 @@
-# Akash attack sandbox
+# Attack sandbox
 
 An authorized security-research honeypot built for Cyberdefense Hackathon
-#SFTechWeek (Oct 9, 2026). Three services deployed together on Akash, using
-Akash's own internal-vs-global network boundary as part of the attack
-surface — not just a single vulnerable app to click around in.
+#SFTechWeek (Oct 9, 2026) — the "attack surface" leg of a four-part project
+(attack surface / attack / detection / remediation; Patrick attacks this,
+detection is `walmsley-lab/cyber-defense`, remediation is a PR into
+`manvendersingh21/closeloop`). One repo, two environments:
+
+- **This top level — Akash.** Three custom services (storefront, metadata,
+  internal-api) deployed on Akash, using Akash's internal-vs-global network
+  boundary as part of the attack surface. The live Akash deployment
+  currently runs OWASP Juice Shop instead (`deploy-juiceshop.yaml`) as the
+  simpler, zero-build attack vector; the custom chain below is still here,
+  buildable via `.github/workflows/build.yml` → `ghcr.io`.
+- **`k8s/` — a real local Kubernetes cluster** (`kind` + Calico), with a
+  NetworkPolicy misconfiguration and an RBAC over-permission as two
+  independent escape paths, plus a live Svelte dashboard. See
+  [`k8s/README.md`](k8s/README.md).
+
+`VULNERABILITY_FORMAT.md` documents every finding from both environments in
+the shared `exploit-handoff/v1` contract shape (from `closeloop` issue #1).
+
+## Akash: the chain
 
 ## The chain
 
